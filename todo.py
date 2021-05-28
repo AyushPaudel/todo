@@ -75,17 +75,28 @@ def print_missed_tasks():
     print_tasks(get_tasks(), '{0}. {1}. {2}')
 
 
-def add_task():
+def add_task(name):
+    print('Enter deadline in format yyyy-mm-dd: ')
+    try:
+        deadline = datetime.strptime(input(), '%Y-%m-%d')
+    
+        new_row = Table(task=name, deadline=deadline)
+
+        session.add(new_row)
+        session.commit()
+        print('The task has been added!')
+    
+    except:
+        print('Error: Please enter deadline in valid format i.e yyyy-mm-dd')
+        add_task(name)
+
+
+   
+def prompt_task_name():
     print('Enter task')
     task = input()
-    print('Enter deadline')
-    deadline = datetime.strptime(input(), '%Y-%m-%d')
-    new_row = Table(task=task, deadline=deadline)
-
-    session.add(new_row)
-    session.commit()
-    print('The task has been added!')
-
+    add_task(task)
+   
 
 def delete_task():
     print('Chose the number of the task you want to delete:')
@@ -115,6 +126,6 @@ while True:
     if s == '4':
         print_missed_tasks()
     if s == '5':
-        add_task()
+        prompt_task_name()
     if s == '6':
         delete_task()
